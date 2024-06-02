@@ -30,7 +30,6 @@ import com.shifat.myhadis.ui.common.HadisCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
 fun FavoriteScreen(navController: NavHostController) {
     val viewModel: FavoriteViewModel = hiltViewModel()
     val hadisList:  State<List<Hadis>> = viewModel.favoriteHadisList.collectAsState()

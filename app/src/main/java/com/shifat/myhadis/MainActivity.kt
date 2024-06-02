@@ -11,9 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.homo_sapiens.hadisapp.ui.theme.HadisAppTheme
-import com.shifat.myhadis.ui.screens.ContactScreen
-import com.shifat.myhadis.ui.screens.Favorite
-import com.shifat.myhadis.ui.screens.Home
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -40,7 +40,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 
 @Composable
-@Preview(showSystemUi = true, showBackground = true)
 fun HomeScreen(navController: NavHostController) {
     val viewModel: HomeViewModel = hiltViewModel()
     val hadisList:  State<List<Hadis>> = viewModel.hadisList.collectAsState()
