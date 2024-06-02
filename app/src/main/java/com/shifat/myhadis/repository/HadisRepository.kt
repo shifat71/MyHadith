@@ -43,8 +43,8 @@ class HadisRepository @Inject constructor(private val hadisApi: HadisApi){
         }
     }
 
-    suspend fun getFavHadis(){
-        val response = hadisApi.getFavoriteHadis("01872583391")
+    suspend fun getFavHadis(mobileNo: String){
+        val response = hadisApi.getFavoriteHadis(mobileNo)
         Log.d("favHad", response.body().toString())
         if(response.isSuccessful && response.body()!=null){
             _favoriteHadisList.emit(response.body()!!)

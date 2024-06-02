@@ -1,5 +1,6 @@
 package com.shifat.myhadis.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -35,15 +36,21 @@ import com.shifat.myhadis.ui.common.HadisCard
 import com.shifat.myhadis.ui.common.TopBar
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 
+
 @Composable
 fun HomeScreen(navController: NavHostController) {
     val viewModel: HomeViewModel = hiltViewModel()
+    val authViewModel: AuthViewModel = hiltViewModel()
+
     val hadisList:  State<List<Hadis>> = viewModel.hadisList.collectAsState()
 
+    val isOtpSuccess = authViewModel.isOtpSuccess.collectAsState().value
+    val context = LocalContext.current
     val listState = rememberLazyListState()
     val topBarVisibleState = remember { mutableStateOf(true) }
 
@@ -51,6 +58,9 @@ fun HomeScreen(navController: NavHostController) {
 
     LaunchedEffect(listState.firstVisibleItemScrollOffset) {
         topBarVisibleState.value = listState.firstVisibleItemScrollOffset <= 0
+    }
+    if (isOtpSuccess) {
+        Toast.makeText(context, "You are subscribed to the service for 30 days. Welcome!", Toast.LENGTH_SHORT).show()
     }
     Scaffold(
         topBar = {
@@ -118,6 +128,7 @@ fun HadisDialog(
                           state = listState
                    ) {
                        item {
+
                            Row(
                                modifier = Modifier.fillMaxWidth(),
                                horizontalArrangement = Arrangement.SpaceBetween

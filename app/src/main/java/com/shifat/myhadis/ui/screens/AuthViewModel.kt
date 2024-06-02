@@ -15,10 +15,14 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel@Inject constructor(private val repository: AuthRepository): ViewModel(){
 
-    val userNumber = MutableStateFlow<String>("")
+
+    val userNumber = repository.userNumber
     val referenceNo = MutableStateFlow<String>("")
+    val otpError = MutableStateFlow<Boolean>(false)
     val loginError = MutableStateFlow<Boolean>(false)
     val isLoginLoading = MutableStateFlow<Boolean>(false)
+    val isOtpLoading = MutableStateFlow<Boolean>(false)
+    val isOtpSuccess = MutableStateFlow<Boolean>(false)
 
     suspend fun subscribeUser(phoneNumber: String): String {
         val response = repository.subscribeUser(phoneNumber)
@@ -26,7 +30,7 @@ class AuthViewModel@Inject constructor(private val repository: AuthRepository): 
         userNumber.value = phoneNumber
 
         if(response.referenceNo != null) {
-            Log.d("OTPLog", response.referenceNo)
+            Log.d("refNo",response.referenceNo)
             referenceNo.value = response.referenceNo
             return "OTP"
         }
@@ -34,6 +38,30 @@ class AuthViewModel@Inject constructor(private val repository: AuthRepository): 
         else return "ERROR"
     }
 
+    fun handleOtp(navController: NavHostController, otp: String){
+        isOtpLoading.value = true
+        viewModelScope.launch {
+            try {
+                Log.d("otpp", "start")
+                val response = repository.confirmSubscription(referenceNo.value, otp)
+                Log.d("otpp", response)
+
+                if (response == "SUCCESS") {
+                    isOtpSuccess.value = true
+                    navController.navigate(Screen.HomeScreen.name)
+                } else {
+                    otpError.value = true
+                }
+        }catch (e: Exception){
+            Log.e("AuthViewModel", "Error confirming subscription", e)
+            otpError.value = true
+        }
+        finally {
+            isOtpLoading.value = false
+        }
+        }
+
+    }
 
     fun login(phoneNumber: String, navController: NavHostController){
         isLoginLoading.value = true
@@ -42,9 +70,7 @@ class AuthViewModel@Inject constructor(private val repository: AuthRepository): 
         viewModelScope.launch {
 
             try {
-
                    response = subscribeUser(phoneNumber)
-
                 if(response=="OTP") {
                     navController.navigate(Screen.OtpScreen.name)
                 }

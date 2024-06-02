@@ -1,5 +1,6 @@
 package com.shifat.myhadis
 
+import LoginScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -7,7 +8,6 @@ import androidx.navigation.compose.rememberNavController
 import com.shifat.myhadis.ui.screens.ContactScreen
 import com.shifat.myhadis.ui.screens.FavoriteScreen
 import com.shifat.myhadis.ui.screens.HomeScreen
-import com.shifat.myhadis.ui.screens.Login
 import com.shifat.myhadis.ui.screens.OtpScreen
 import com.shifat.myhadis.ui.screens.Screen
 
@@ -15,10 +15,10 @@ import com.shifat.myhadis.ui.screens.Screen
 fun App(){
 
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.Login.name ){
+    NavHost(navController = navController, startDestination = Screen.ContactsScreen.name ){
 
         composable(Screen.Login.name){
-            Login(navController = navController)
+            LoginScreen(navController = navController)
         }
 
         composable(Screen.OtpScreen.name){

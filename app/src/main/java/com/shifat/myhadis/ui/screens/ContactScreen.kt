@@ -47,7 +47,7 @@ import com.shifat.myhadis.ui.common.TopBar
 @Composable
 fun ContactScreen(navController: NavHostController) {
     val viewModel: ContactsViewModel = hiltViewModel()
-    val contacts by viewModel.contacts.collectAsState()
+    val contacts by viewModel.contactList.collectAsState()
     val listState = rememberLazyListState()
     val topBarVisibleState = remember { mutableStateOf(true) }
 
@@ -88,7 +88,7 @@ fun ContactScreen(navController: NavHostController) {
 
                 if (isAddContactDialogOpen) {
                     AddContactDialog(onClose = { isAddContactDialogOpen = false }) { name, phoneNumber ->
-                        viewModel.addContact(Contact(name = name, phoneNumber = phoneNumber))
+                        viewModel.addContact(name, phoneNumber)
                     }
                 }
 
@@ -97,7 +97,7 @@ fun ContactScreen(navController: NavHostController) {
                         contact = selectedContact!!,
                         onClose = { isEditContactDialogOpen = false },
                         onEdit = { name, phoneNumber ->
-                            viewModel.updateContact(selectedContact!!, Contact(id = selectedContact!!.id, name = name, phoneNumber = phoneNumber))
+                            viewModel.updateContact(selectedContact!!, Contact(userNumber = selectedContact!!.userNumber, name = name, number = phoneNumber))
                         },
                         onRemove = {
                             viewModel.removeContact(selectedContact!!)
@@ -134,7 +134,7 @@ fun ContactCard(contact: Contact, onClick: (Contact) -> Unit) {
                 Icon(Icons.Default.Phone, contentDescription = "Phone Icon")
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = contact.phoneNumber,
+                    text = contact.number,
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -147,7 +147,7 @@ fun ContactCard(contact: Contact, onClick: (Contact) -> Unit) {
 @Composable
 fun EditContactDialog(contact: Contact, onClose: () -> Unit, onEdit: (String, String) -> Unit, onRemove: () -> Unit) {
     var name by remember { mutableStateOf(contact.name) }
-    var phoneNumber by remember { mutableStateOf(contact.phoneNumber) }
+    var phoneNumber by remember { mutableStateOf(contact.number) }
 
     Dialog(onDismissRequest = onClose) {
         Column(modifier = Modifier

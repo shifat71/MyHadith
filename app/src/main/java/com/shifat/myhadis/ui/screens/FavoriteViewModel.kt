@@ -1,5 +1,6 @@
 package com.shifat.myhadis.ui.screens
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import com.shifat.myhadis.model.Hadis
 import com.shifat.myhadis.repository.HadisRepository
@@ -7,13 +8,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import com.shifat.myhadis.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
 @HiltViewModel
-class FavoriteViewModel @Inject constructor(private val repository: HadisRepository): ViewModel() {
-    val userNumber ="01872583391"
+class FavoriteViewModel @Inject constructor(
+    private val repository: HadisRepository,
+    private val authRepository: AuthRepository
+): ViewModel() {
+
+    val userNumber = authRepository.userNumber.value
     val _favoriteHadisList: MutableStateFlow<List<Hadis>> = MutableStateFlow(emptyList())
 
     val favoriteHadisList: StateFlow<List<Hadis>>
@@ -22,7 +28,7 @@ class FavoriteViewModel @Inject constructor(private val repository: HadisReposit
     init {
         viewModelScope.launch {
             repository.getHadis()
-            repository.getFavHadis()
+            repository.getFavHadis(userNumber)
         }
     }
 
