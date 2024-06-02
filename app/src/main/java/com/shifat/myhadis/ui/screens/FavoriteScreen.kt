@@ -20,13 +20,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shifat.myhadis.model.Hadis
 import com.shifat.myhadis.ui.common.BottomBar
 import com.shifat.myhadis.ui.common.HadisCard
+import com.shifat.myhadis.ui.common.TopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,23 +43,10 @@ fun FavoriteScreen(navController: NavHostController) {
 
     Scaffold(
         topBar = {
-            AnimatedVisibility(visible = topBarVisibleState.value) {
-                TopAppBar(
-                    title = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text("Favorite Hadith")
-                        }
-                    },
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
-                    modifier = Modifier.height(75.dp)
-                )
-            }
+            TopBar(topBarVisibleState, "Favorite Hadiths")
         },
         bottomBar = {
-            BottomBar()
+            BottomBar(navController, Screen.FavoriteScreen.name)
         }
     ) { it ->
         LazyColumn(

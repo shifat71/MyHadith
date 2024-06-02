@@ -27,8 +27,11 @@ class FavoriteViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getHadis()
-            repository.getFavHadis(userNumber)
+            try {
+                repository.getFavHadis(userNumber)
+            }catch (e: Exception){
+                e.printStackTrace()
+            }
         }
     }
 

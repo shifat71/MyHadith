@@ -40,9 +40,16 @@ interface HadisApi {
 
     @PUT("favContact/{mobile}")
     suspend fun updateContact(@Path("mobile") mobile: String, @Body request: UpdateContactRequest ): Response<Contact>
+    @POST("send-sms")
+    suspend fun sendHadis(@Body request: SendHadisRequest): Response<String>
 
 }
 
+
+data class SendHadisRequest(
+    val messageBody: String,
+    val numbers: List<String>
+)
 
 data class UpdateContactRequest(
     val mobile: String,

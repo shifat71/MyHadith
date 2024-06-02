@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -15,6 +16,8 @@ class HomeViewModel @Inject constructor(
     private val repository: HadisRepository
 ): ViewModel() {
 
+    val isLoading = MutableStateFlow(false)
+    val error = MutableStateFlow<String>("")
     val hadisList: StateFlow<List<Hadis>>
         get() = repository.hadis
 
@@ -35,6 +38,29 @@ class HomeViewModel @Inject constructor(
             return true
         }
         return false
+    }
+
+    fun sendHadis(hadis: Hadis) {
+
+        viewModelScope.launch {
+            try {
+                error.value = ""
+                isLoading.value = true
+               val response = repository.sendHadis(hadis)
+                if(response=="SUCCESS"){
+                    error.value = "Hadis Sent Successfully"
+                }
+            }catch (e: Exception){
+                error.value = e.message.toString()
+            }finally {
+                isLoading.value = false
+            }
+        }
+    }
+
+
+    fun resetError() {
+        error.value = ""
     }
 
 }

@@ -1,10 +1,13 @@
 package com.shifat.myhadis.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,6 +23,7 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -51,6 +56,28 @@ fun ContactScreen(navController: NavHostController) {
     val listState = rememberLazyListState()
     val topBarVisibleState = remember { mutableStateOf(true) }
 
+    val isLoading = viewModel.isLoading.collectAsState().value
+    val error = viewModel.error.collectAsState().value
+
+    val context = LocalContext.current
+
+    if(error!=""){
+        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        viewModel.resetError()
+    }
+
+    if (isLoading) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 4.dp
+            )
+        }
+    }
+
     LaunchedEffect(listState.firstVisibleItemScrollOffset) {
         topBarVisibleState.value = listState.firstVisibleItemScrollOffset <= 0
     }
@@ -60,7 +87,7 @@ fun ContactScreen(navController: NavHostController) {
     var selectedContact by remember { mutableStateOf<Contact?>(null) }
     Scaffold(
         topBar = {TopBar(topBarVisibleState = topBarVisibleState , ScreenName = "Contacts")},
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(navController, Screen.ContactsScreen.name) },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { isAddContactDialogOpen = true }

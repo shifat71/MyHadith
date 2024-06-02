@@ -17,7 +17,10 @@ class ContactsRepository @Inject constructor(
 ){
     val userNumber = authRepository.userNumber.value
 
-    private val _contacts = MutableStateFlow<List<Contact>>(emptyList())
+    private val _contacts = MutableStateFlow<List<Contact>>(
+        listOf(
+            Contact("01872583391", "Shifat", "01872583391"))
+    )
     val contacts: StateFlow<List<Contact>>
         get() = _contacts
 
@@ -40,7 +43,7 @@ class ContactsRepository @Inject constructor(
         Log.d("AddContactReq", "done")
         if(response.isSuccessful && response.code()==201){
             _contacts.value = _contacts.value + contact
-        }
+        }else throw Exception("Couldn't Add Contact! The user might be existing or a server error.")
     }
 
    suspend fun updateContact(oldContact: Contact, newContact: Contact) {
@@ -59,7 +62,7 @@ class ContactsRepository @Inject constructor(
                _contacts.value = _contacts.value.map {
                    if (it == oldContact) newContact else it
                }
-           }
+           }else throw Exception("Couldn't Update Contact! Please Try Again.")
 
     }
 
@@ -74,7 +77,7 @@ class ContactsRepository @Inject constructor(
 
        if(response.isSuccessful && response.code()==201) {
             _contacts.value = _contacts.value - contact
-       }
+       }else throw Exception("Couldn't Delete Contact! Please Try Again.")
     }
 
 }

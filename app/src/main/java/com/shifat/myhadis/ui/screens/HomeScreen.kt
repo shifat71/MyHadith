@@ -27,7 +27,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.shifat.myhadis.model.Hadis
@@ -67,7 +66,7 @@ fun HomeScreen(navController: NavHostController) {
             TopBar(topBarVisibleState, "Home")
         },
         bottomBar = {
-            BottomBar()
+            BottomBar(navController = navController, currentScreen = Screen.HomeScreen.name)
         }
     ) { it ->
         LazyColumn(
@@ -104,7 +103,8 @@ fun HadisDialog(
        Box(contentAlignment = Alignment.Center,
            modifier = Modifier.fillMaxSize()){
            Scaffold(
-               topBar = {TopBar(topBarVisibleState = topBarVisibleState , ScreenName = "Send Hadith" )},
+               topBar = {
+                   TopBar(topBarVisibleState = topBarVisibleState , ScreenName = "Send Hadith" )},
                floatingActionButton = {
                    Row( horizontalArrangement = Arrangement.Center,
                        modifier = Modifier
@@ -112,7 +112,10 @@ fun HadisDialog(
                            .padding(start = 50.dp),
 
                    ) {
-                       FloatingActionButton(onClick = { /* TODO: Implement send functionality */ }) {
+                       FloatingActionButton(onClick = {
+                         viewModel.sendHadis(hadis)
+                           viewModel.resetError()
+                       }) {
                            Icon(Icons.Filled.Send, contentDescription = "Send")
                        }
 

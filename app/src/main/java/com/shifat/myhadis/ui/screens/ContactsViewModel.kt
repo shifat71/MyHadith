@@ -29,6 +29,7 @@ class ContactsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
+                error.value = ""
                 isLoading.value = true
                 repository.getContacts()
             }catch (e: Exception){
@@ -40,6 +41,7 @@ class ContactsViewModel @Inject constructor(
     }
     fun addContact(name: String, phoneNumber:String) {
         viewModelScope.launch {
+            error.value = ""
             val contact = Contact(
                 userNumber = userNumber,
                 name = name,
@@ -60,6 +62,7 @@ class ContactsViewModel @Inject constructor(
     fun updateContact(oldContact: Contact, newContact: Contact) {
         viewModelScope.launch {
             try {
+                error.value = ""
                 isLoading.value = true
                 repository.updateContact(oldContact, newContact)
             }catch (e: Exception){
@@ -73,6 +76,7 @@ class ContactsViewModel @Inject constructor(
     fun removeContact(contact: Contact) {
         viewModelScope.launch {
             try {
+                error.value = ""
                 isLoading.value = true
                 repository.removeContact(contact)
             }catch (e: Exception){
@@ -81,6 +85,10 @@ class ContactsViewModel @Inject constructor(
                 isLoading.value = false
             }
         }
+    }
+
+    fun resetError() {
+        error.value = ""
     }
 
 }
