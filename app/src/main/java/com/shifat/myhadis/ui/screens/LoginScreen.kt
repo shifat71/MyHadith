@@ -64,7 +64,7 @@ fun Login(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { navController.navigate(Screen.OtpScreen.name) },
+                onClick = { viewModel.login(navController= navController, phoneNumber = phoneNumber) },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Submit")

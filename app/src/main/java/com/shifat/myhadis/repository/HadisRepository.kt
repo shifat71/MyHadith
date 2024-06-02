@@ -51,21 +51,4 @@ class HadisRepository @Inject constructor(private val hadisApi: HadisApi){
         }
     }
 
-    suspend fun isUserSubscribed(mobileNo: String): Boolean {
-        val response = hadisApi.isUserSubscribed(mobileNo)
-        if(response.isSuccessful && response.body()!=null){
-           if(response.body()!!.statusCode=="S1000") return true
-            else return false
-        }
-        return false
-    }
-
-   suspend fun subscribeUser(mobileNo: String): String {
-        val response = hadisApi.subscribeUser(mobileNo)
-        if(response.isSuccessful && response.body()!=null){
-            if(response.body()!!.statusCode=="S1000") return response.body()!!.referenceNo
-            else return ""
-        }
-        return ""
-    }
 }

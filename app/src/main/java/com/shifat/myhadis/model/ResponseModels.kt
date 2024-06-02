@@ -8,8 +8,16 @@ data class SubscribeResponse(
 )
 
 
+
+
 data class CheckSubscriptionResponse(
     val statusCode: String,
     val statusDetail: String,
     val subscriptionStatus: String
+)
+
+
+data class ConfirmSubscriptionRequest(
+    val referenceNo: String,
+    val otp: String
 )
