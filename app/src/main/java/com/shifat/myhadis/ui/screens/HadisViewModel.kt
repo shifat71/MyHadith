@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class HadisViewModel @Inject constructor(
     private val repository: HadisRepository,
     private val authRepository: AuthRepository,
 ): ViewModel() {
@@ -24,13 +24,37 @@ class HomeViewModel @Inject constructor(
     val hadisList: StateFlow<List<Hadis>>
         get() = repository.hadis
 
+    val favoriteHadisList: StateFlow<List<Hadis>>
+        get() = repository.favoriteHadisList
+
+    val userNumber: String
+        get() = authRepository.userNumber.value
 
     init {
         viewModelScope.launch {
-            repository.getHadis()
-            repository.getFavoriteHadis(authRepository.userNumber.value)
+            try {
+                Log.d("FavHadisException", userNumber)
+                repository.getHadis()
+                repository.getFavoriteHadis(userNumber)
+            }catch (e: Exception){
+                Log.d("FavHadisException", e.toString())
+            }
         }
     }
+
+    fun updateFavoriteHadis(){
+        viewModelScope.launch {
+            try {
+                Log.d("FavHadisException", userNumber)
+                repository.getFavoriteHadis(userNumber)
+            }catch (e: Exception){
+                Log.d("FavHadisException", e.toString())
+            }
+        }
+
+    }
+
+
 
     fun toggleFavorite(hadis: Hadis) {
         viewModelScope.launch {

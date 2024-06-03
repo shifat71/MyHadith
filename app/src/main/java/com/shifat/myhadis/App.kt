@@ -15,7 +15,7 @@ import com.shifat.myhadis.ui.screens.Screen
 fun App(){
 
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.ContactsScreen.name ){
+    NavHost(navController = navController, startDestination = Screen.HomeScreen.name ){
 
         composable(Screen.Login.name){
             LoginScreen(navController = navController)

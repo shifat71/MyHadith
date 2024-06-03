@@ -18,8 +18,7 @@ class ContactsRepository @Inject constructor(
     val userNumber = authRepository.userNumber.value
 
     private val _contacts = MutableStateFlow<List<Contact>>(
-        listOf(
-            Contact("01872583391", "Shifat", "01872583391"))
+        listOf()
     )
     val contacts: StateFlow<List<Contact>>
         get() = _contacts
@@ -68,13 +67,17 @@ class ContactsRepository @Inject constructor(
 
    suspend fun removeContact(contact: Contact) {
         val deleteContactRequest = DeleteContactRequest(
+            mobile= userNumber,
             favMobile= contact.number
         )
 
        Log.d("DeleteContactReq", "started")
-       val response = hadisApi.deleteContact(userNumber,deleteContactRequest)
+       val response = hadisApi.deleteContact(deleteContactRequest)
        Log.d("DeleteContactReq", "done")
 
+       Log.d("DeleteContactReq", response.isSuccessful.toString())
+
+       Log.d("DeleteContactReq", response.code().toString())
        if(response.isSuccessful && response.code()==201) {
             _contacts.value = _contacts.value - contact
        }else throw Exception("Couldn't Delete Contact! Please Try Again.")

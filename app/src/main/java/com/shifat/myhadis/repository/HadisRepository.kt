@@ -1,6 +1,7 @@
 package com.shifat.myhadis.repository
 
 import android.util.Log
+import com.shifat.myhadis.api.AddFavoriteHadithRequest
 import com.shifat.myhadis.api.HadisApi
 import com.shifat.myhadis.api.SendHadisRequest
 import com.shifat.myhadis.model.Hadis
@@ -26,12 +27,33 @@ class HadisRepository @Inject constructor(
 
 
 
-    fun toggleFavorite(hadis: Hadis) {
+    suspend fun toggleFavorite(hadis: Hadis) {
+
         val currentFavorites = _favoriteHadisList.value.toMutableList()
-        if (currentFavorites.contains(hadis)) {
-            currentFavorites.remove(hadis)
+
+        if ( currentFavorites.contains(hadis) ) {
+           val response =  hadisApi.deleteFavoriteHadith(
+                AddFavoriteHadithRequest(
+                    mobile = contactsRepository.userNumber,
+                    hadithId = hadis.id
+                )
+            )
+            Log.d("DeleteFav", currentFavorites.toString())
+            if(response.isSuccessful && response.code()==201){
+                currentFavorites.remove(hadis)
+            }else throw Exception("Couldn't Remove Favorite Hadis")
+
         } else {
-            currentFavorites.add(hadis)
+            val response =  hadisApi.addFavoriteHadith(
+                AddFavoriteHadithRequest(
+                    mobile = contactsRepository.userNumber,
+                    hadithId = hadis.id
+                )
+            )
+            if(response.isSuccessful && response.code()==201){
+                currentFavorites.add(hadis)
+            }else throw Exception("Couldn't Add Favorite Hadis")
+
         }
         Log.d("HiShona","Aha")
         _favoriteHadisList.value = currentFavorites
@@ -48,7 +70,7 @@ class HadisRepository @Inject constructor(
         }
     }
 
-    suspend fun getFavHadis(mobileNo: String){
+    suspend fun getFavoriteHadis(mobileNo: String){
         val response = hadisApi.getFavoriteHadis(mobileNo)
         Log.d("favHad", response.body().toString())
         if(response.isSuccessful && response.body()!=null){

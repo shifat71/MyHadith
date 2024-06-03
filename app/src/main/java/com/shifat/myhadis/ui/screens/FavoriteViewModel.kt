@@ -1,5 +1,6 @@
 package com.shifat.myhadis.ui.screens
 
+import android.util.Log
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import com.shifat.myhadis.model.Hadis
@@ -20,30 +21,7 @@ class FavoriteViewModel @Inject constructor(
 ): ViewModel() {
 
     val userNumber = authRepository.userNumber.value
-    val _favoriteHadisList: MutableStateFlow<List<Hadis>> = MutableStateFlow(emptyList())
-
-    val favoriteHadisList: StateFlow<List<Hadis>>
-        get() = repository.favoriteHadisList
-
-    init {
-        viewModelScope.launch {
-            try {
-                repository.getFavHadis(userNumber)
-            }catch (e: Exception){
-                e.printStackTrace()
-            }
-        }
-    }
 
 
-    fun toggleFavorite(hadis: Hadis) {
-        val currentFavorites = _favoriteHadisList.value.toMutableList()
-        if (currentFavorites.contains(hadis)) {
-            currentFavorites.remove(hadis)
-        } else {
-            currentFavorites.add(hadis)
-        }
-        _favoriteHadisList.value = currentFavorites
-    }
 
 }

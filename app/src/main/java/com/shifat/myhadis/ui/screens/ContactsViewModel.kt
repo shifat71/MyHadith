@@ -1,5 +1,7 @@
 package com.shifat.myhadis.ui.screens
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shifat.myhadis.model.Contact
@@ -23,6 +25,9 @@ class ContactsViewModel @Inject constructor(
     val contactList: StateFlow<List<Contact>>
         get() = repository.contacts
 
+    val isContactAdded = MutableStateFlow(false)
+    val isContactRemoved = MutableStateFlow(false)
+    val isContactUpdated = MutableStateFlow(false)
 
     val isLoading = MutableStateFlow(false)
     val error = MutableStateFlow<String>("")
@@ -51,6 +56,7 @@ class ContactsViewModel @Inject constructor(
             try {
                 isLoading.value = true
                 repository.addContact(contact)
+                isContactAdded.value = true
             }catch (e: Exception){
                 error.value = e.message.toString()
             }finally {
@@ -65,6 +71,7 @@ class ContactsViewModel @Inject constructor(
                 error.value = ""
                 isLoading.value = true
                 repository.updateContact(oldContact, newContact)
+                isContactUpdated.value = true
             }catch (e: Exception){
                 error.value = e.message.toString()
             }finally {
@@ -79,6 +86,7 @@ class ContactsViewModel @Inject constructor(
                 error.value = ""
                 isLoading.value = true
                 repository.removeContact(contact)
+                isContactRemoved.value = true
             }catch (e: Exception){
                 error.value = e.message.toString()
             }finally {

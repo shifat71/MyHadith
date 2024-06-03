@@ -20,6 +20,7 @@ interface HadisApi {
 
     @GET("hadith/fav/{mobile}")
     suspend fun getFavoriteHadis(@Path("mobile") mobile: String): Response< List<Hadis> >
+
     @GET("check_subscription/{mobile}")
     suspend fun isUserSubscribed(@Path("mobile") mobile: String): Response< CheckSubscriptionResponse >
     @POST("subscribe")
@@ -35,15 +36,33 @@ interface HadisApi {
     suspend fun saveContact(@Path("mobile") mobile: String, @Body request: SaveContactRequest ): Response<Contact>
 
 
-    @DELETE("favContact/{mobile}")
-    suspend fun deleteContact(@Path("mobile") mobile: String, @Body request: DeleteContactRequest ): Response<String>
+    @POST("deleteContact")
+    suspend fun deleteContact(@Body request: DeleteContactRequest ): Response<StringResponse>
 
     @PUT("favContact/{mobile}")
     suspend fun updateContact(@Path("mobile") mobile: String, @Body request: UpdateContactRequest ): Response<Contact>
     @POST("send-sms")
     suspend fun sendHadis(@Body request: SendHadisRequest): Response<String>
 
+    @POST("hadith/fav")
+    suspend fun addFavoriteHadith(@Body request: AddFavoriteHadithRequest): Response<String>
+
+
+    @POST("hadith/fav/delete")
+    suspend fun deleteFavoriteHadith(@Body request: AddFavoriteHadithRequest): Response<String>
+
+
 }
+
+
+data class StringResponse(
+    val message: String
+)
+
+data class AddFavoriteHadithRequest(
+    val mobile: String,
+    val hadithId: Int
+)
 
 
 data class SendHadisRequest(
@@ -58,6 +77,7 @@ data class UpdateContactRequest(
     val editedName: String
 )
 data class DeleteContactRequest(
+    val mobile: String,
     val favMobile: String
 )
 

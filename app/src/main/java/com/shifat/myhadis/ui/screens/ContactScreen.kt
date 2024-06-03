@@ -85,6 +85,32 @@ fun ContactScreen(navController: NavHostController) {
     var isAddContactDialogOpen by remember { mutableStateOf(false) }
     var isEditContactDialogOpen by remember { mutableStateOf(false) }
     var selectedContact by remember { mutableStateOf<Contact?>(null) }
+
+    val isContactAdded by viewModel.isContactAdded.collectAsState()
+    val isContactRemoved by viewModel.isContactRemoved.collectAsState()
+    val isContactUpdated by viewModel.isContactUpdated.collectAsState()
+
+    LaunchedEffect(isContactAdded) {
+        if (isContactAdded) {
+            Toast.makeText(context, "Contact added successfully", Toast.LENGTH_SHORT).show()
+            viewModel.isContactAdded.value = false
+        }
+    }
+
+    LaunchedEffect(isContactRemoved) {
+        if (isContactRemoved) {
+            Toast.makeText(context, "Contact removed successfully", Toast.LENGTH_SHORT).show()
+            viewModel.isContactRemoved.value = false
+        }
+    }
+
+    LaunchedEffect(isContactUpdated) {
+        if (isContactUpdated) {
+            Toast.makeText(context, "Contact updated successfully", Toast.LENGTH_SHORT).show()
+            viewModel.isContactUpdated.value = false
+        }
+    }
+
     Scaffold(
         topBar = {TopBar(topBarVisibleState = topBarVisibleState , ScreenName = "Contacts")},
         bottomBar = { BottomBar(navController, Screen.ContactsScreen.name) },
